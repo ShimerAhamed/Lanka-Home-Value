@@ -3,25 +3,43 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
-const predictionRoutes = require("./routes/predictionRoutes");
-
 // Load variables from the .env file.
 dotenv.config();
+
+const predictionRoutes = require("./routes/predictionRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI =
   process.env.MONGO_URI || "mongodb://127.0.0.1:27017/lankahomevalue";
 
-// Allow requests from the React frontend.
-app.use(cors());
+// Allow requests from the React frontend during development.
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+  })
+);
 
 // Allow Express to read JSON request bodies.
 app.use(express.json());
 
+// Return a beginner-friendly message when invalid JSON is sent.
+app.use((error, req, res, next) => {
+  if (error instanceof SyntaxError && error.status === 400 && "body" in error) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid JSON. Please check the request body.",
+    });
+  }
+
+  return next(error);
+});
+
 // Connect Express backend to MongoDB using mongoose.
 mongoose
-  .connect(MONGO_URI)
+  .connect(MONGO_URI, {
+    serverSelectionTimeoutMS: 5000,
+  })
   .then(() => {
     console.log("MongoDB connected successfully");
   })

@@ -199,6 +199,13 @@ a {
   margin-bottom: 24px;
 }
 
+.heading-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
 .page-heading h1 {
   font-size: clamp(1.8rem, 4vw, 3rem);
 }
@@ -256,6 +263,18 @@ a {
   box-shadow: 0 0 0 3px rgba(12, 101, 184, 0.14);
 }
 
+.form-field.has-error input,
+.form-field.has-error select {
+  border-color: #d03c3c;
+  background: #fffafa;
+}
+
+.form-field small {
+  color: #b3261e;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .form-submit {
   justify-self: start;
 }
@@ -283,10 +302,52 @@ a {
 }
 
 .result-card p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
   margin: 0;
   color: #1769aa;
   font-size: 1.1rem;
   font-weight: 800;
+}
+
+.category-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.category-low {
+  background: #238052;
+}
+
+.category-medium {
+  background: #1769aa;
+}
+
+.category-high {
+  background: #b7791f;
+}
+
+.category-premium {
+  background: #6b2fb8;
+}
+
+.disclaimer {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 6px;
+  color: #40566f;
+  background: #f4f8fc;
+  border: 1px solid #dce8f4;
+  line-height: 1.55;
 }
 
 .history-list {
@@ -314,8 +375,7 @@ a {
 }
 
 .history-price span {
-  color: #1769aa;
-  font-weight: 800;
+  justify-self: end;
 }
 
 .architecture-grid {
@@ -362,6 +422,14 @@ a {
 
   .history-price {
     text-align: left;
+  }
+
+  .history-price span {
+    justify-self: start;
+  }
+
+  .heading-row {
+    flex-direction: column;
   }
 }
 

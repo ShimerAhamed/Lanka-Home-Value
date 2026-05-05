@@ -5,11 +5,36 @@ const Prediction = require("../models/Prediction");
 
 const PYTHON_API_URL =
   process.env.PYTHON_API_URL || "http://127.0.0.1:8000/predict";
+const PYTHON_HEALTH_URL = PYTHON_API_URL.replace(/\/predict\/?$/, "/health");
 
 function isMongoConnected() {
   // 1 means mongoose is connected to MongoDB.
   return mongoose.connection.readyState === 1;
 }
+
+// GET /api/health
+// Checks whether the Express backend, FastAPI service, and MongoDB are available.
+const getSystemHealth = async (req, res) => {
+  let pythonApiStatus = "not connected";
+
+  try {
+    const pythonResponse = await axios.get(PYTHON_HEALTH_URL, {
+      timeout: 5000,
+    });
+
+    if (pythonResponse.data?.api === "running") {
+      pythonApiStatus = "connected";
+    }
+  } catch (error) {
+    pythonApiStatus = "not connected";
+  }
+
+  return res.status(200).json({
+    backend: "running",
+    pythonApi: pythonApiStatus,
+    database: isMongoConnected() ? "connected" : "not connected",
+  });
+};
 
 // POST /api/predict
 // Receives house details from React, sends them to FastAPI, saves the result,
@@ -30,6 +55,13 @@ const predictHousePrice = async (req, res) => {
       });
     }
 
+    if (!isMongoConnected()) {
+      return res.status(503).json({
+        success: false,
+        message: "MongoDB is not connected. Please start MongoDB first.",
+      });
+    }
+
     // Send the same JSON data to the Python FastAPI prediction API.
     const pythonResponse = await axios.post(PYTHON_API_URL, inputData, {
       timeout: 15000,
@@ -44,13 +76,6 @@ const predictHousePrice = async (req, res) => {
       return res.status(502).json({
         success: false,
         message: "Invalid response received from prediction service.",
-      });
-    }
-
-    if (!isMongoConnected()) {
-      return res.status(503).json({
-        success: false,
-        message: "MongoDB is not connected. Please start MongoDB first.",
       });
     }
 
@@ -164,6 +189,7 @@ const deletePrediction = async (req, res) => {
 };
 
 module.exports = {
+  getSystemHealth,
   predictHousePrice,
   getPredictionHistory,
   deletePrediction,

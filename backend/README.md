@@ -73,6 +73,26 @@ Response:
 }
 ```
 
+### System Health
+
+```text
+GET http://localhost:5000/api/health
+```
+
+Response:
+
+```json
+{
+  "backend": "running",
+  "pythonApi": "connected",
+  "database": "connected"
+}
+```
+
+If `pythonApi` is `not connected`, start FastAPI first.
+
+If `database` is `not connected`, start MongoDB first.
+
 ### Predict House Price
 
 ```text

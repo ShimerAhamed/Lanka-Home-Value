@@ -38,6 +38,8 @@ const initialFormData = {
   location_category: "Urban",
 };
 
+const currentYear = new Date().getFullYear();
+
 const numericFields = [
   "perch",
   "bedrooms",
@@ -56,6 +58,61 @@ const numericFields = [
   "luxury_score",
 ];
 
+const requiredFields = Object.keys(initialFormData);
+
+const fieldLabels = {
+  district: "District",
+  area: "Area",
+  perch: "Land Size",
+  bedrooms: "Bedrooms",
+  bathrooms: "Bathrooms",
+  kitchen_area_sqft: "Kitchen Area",
+  parking_spots: "Parking Spots",
+  has_garden: "Has Garden",
+  has_ac: "Has AC",
+  water_supply: "Water Supply",
+  electricity: "Electricity",
+  floors: "Floors",
+  year_built: "Year Built",
+  nearest_city: "Nearest City",
+  property_type: "Property Type",
+  house_size_sqft: "House Size",
+  house_age: "House Age",
+  condition: "Condition",
+  furnishing_status: "Furnishing Status",
+  road_access_width_ft: "Road Access Width",
+  distance_to_main_road_km: "Distance to Main Road",
+  distance_to_town_km: "Distance to Town",
+  has_boundary_wall: "Has Boundary Wall",
+  has_servant_room: "Has Servant Room",
+  has_hot_water: "Has Hot Water",
+  has_security: "Has Security",
+  roof_type: "Roof Type",
+  floor_type: "Floor Type",
+  listed_year: "Listed Year",
+  bathroom_bedroom_ratio: "Bathroom Bedroom Ratio",
+  luxury_score: "Luxury Score",
+  location_category: "Location Category",
+};
+
+const nonNegativeFields = [
+  "bedrooms",
+  "bathrooms",
+  "floors",
+  "parking_spots",
+  "distance_to_main_road_km",
+  "distance_to_town_km",
+  "house_age",
+  "luxury_score",
+];
+
+const positiveFields = numericFields.filter(
+  (fieldName) =>
+    !nonNegativeFields.includes(fieldName) &&
+    fieldName !== "year_built" &&
+    fieldName !== "listed_year"
+);
+
 const districts = [
   "Colombo",
   "Gampaha",
@@ -73,6 +130,10 @@ function formatLkr(value) {
   return Number(value || 0).toLocaleString("en-LK");
 }
 
+function getCategoryClass(category) {
+  return `category-badge category-${String(category || "").toLowerCase()}`;
+}
+
 function getErrorMessage(error) {
   if (error.response?.data?.message) {
     return error.response.data.message;
@@ -82,7 +143,7 @@ function getErrorMessage(error) {
     return error.response.data.detail;
   }
 
-  if (error.code === "ERR_NETWORK") {
+  if (error.code === "ERR_NETWORK" || error.code === "ECONNABORTED") {
     return "Backend is not running. Please start the Express backend first.";
   }
 
@@ -93,6 +154,7 @@ function Predict() {
   const [formData, setFormData] = useState(initialFormData);
   const [result, setResult] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event) => {
@@ -101,6 +163,59 @@ function Predict() {
       ...currentData,
       [name]: value,
     }));
+
+    setFieldErrors((currentErrors) => {
+      const updatedErrors = { ...currentErrors };
+      delete updatedErrors[name];
+      return updatedErrors;
+    });
+  };
+
+  const validateForm = () => {
+    const errors = {};
+
+    requiredFields.forEach((fieldName) => {
+      const value = formData[fieldName];
+
+      if (value === "" || value === null || value === undefined) {
+        errors[fieldName] = `${fieldLabels[fieldName]} is required.`;
+      }
+    });
+
+    numericFields.forEach((fieldName) => {
+      const value = formData[fieldName];
+
+      if (value === "" || value === null || value === undefined) {
+        return;
+      }
+
+      const numberValue = Number(value);
+
+      if (Number.isNaN(numberValue)) {
+        errors[fieldName] = `${fieldLabels[fieldName]} must be a valid number.`;
+        return;
+      }
+
+      if (positiveFields.includes(fieldName) && numberValue <= 0) {
+        errors[fieldName] = `${fieldLabels[fieldName]} must be greater than 0.`;
+      }
+
+      if (nonNegativeFields.includes(fieldName) && numberValue < 0) {
+        errors[fieldName] = `${fieldLabels[fieldName]} must not be negative.`;
+      }
+    });
+
+    const yearBuilt = Number(formData.year_built);
+    if (!Number.isNaN(yearBuilt) && (yearBuilt < 1900 || yearBuilt > currentYear)) {
+      errors.year_built = `Year Built must be between 1900 and ${currentYear}.`;
+    }
+
+    const listedYear = Number(formData.listed_year);
+    if (!Number.isNaN(listedYear) && (listedYear < 2000 || listedYear > currentYear)) {
+      errors.listed_year = `Listed Year must be between 2000 and ${currentYear}.`;
+    }
+
+    return errors;
   };
 
   const preparePayload = () => {
@@ -122,6 +237,16 @@ function Predict() {
     setIsLoading(true);
     setResult(null);
     setErrorMessage("");
+    setFieldErrors({});
+
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setFieldErrors(validationErrors);
+      setErrorMessage("Please fix the highlighted form fields before predicting.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await api.post("/predict", preparePayload());
@@ -134,7 +259,7 @@ function Predict() {
   };
 
   const renderInput = (name, label, type = "text") => (
-    <label className="form-field">
+    <label className={`form-field ${fieldErrors[name] ? "has-error" : ""}`}>
       <span>{label}</span>
       <input
         type={type}
@@ -143,20 +268,25 @@ function Predict() {
         onChange={handleChange}
         placeholder={label}
         step={type === "number" ? "any" : undefined}
+        min={type === "number" && name !== "year_built" && name !== "listed_year" ? "0" : undefined}
+        max={name === "year_built" || name === "listed_year" ? currentYear : undefined}
+        required
       />
+      {fieldErrors[name] && <small>{fieldErrors[name]}</small>}
     </label>
   );
 
   const renderSelect = (name, label, options) => (
-    <label className="form-field">
+    <label className={`form-field ${fieldErrors[name] ? "has-error" : ""}`}>
       <span>{label}</span>
-      <select name={name} value={formData[name]} onChange={handleChange}>
+      <select name={name} value={formData[name]} onChange={handleChange} required>
         {options.map((option) => (
           <option key={option} value={option}>
             {option}
           </option>
         ))}
       </select>
+      {fieldErrors[name] && <small>{fieldErrors[name]}</small>}
     </label>
   );
 
@@ -254,7 +384,16 @@ function Predict() {
         <div className="result-card">
           <span className="metric-label">Prediction Result</span>
           <h2>Predicted House Selling Price: LKR {formatLkr(result.predicted_price_lkr)}</h2>
-          <p>Price Category: {result.price_category}</p>
+          <p>
+            Price Category:{" "}
+            <span className={getCategoryClass(result.price_category)}>
+              {result.price_category}
+            </span>
+          </p>
+          <div className="disclaimer">
+            This is an estimated value generated by a machine learning model and is not an
+            official property valuation.
+          </div>
         </div>
       )}
     </section>

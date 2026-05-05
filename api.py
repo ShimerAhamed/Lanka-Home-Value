@@ -155,6 +155,17 @@ def home():
     return {"message": "LankaHomeValue API is running"}
 
 
+@app.get("/health")
+def health_check():
+    """Health route for checking whether FastAPI and the trained model are ready."""
+    model_status = "loaded" if MODEL_PATH.exists() else "not loaded"
+
+    return {
+        "api": "running",
+        "model": model_status,
+    }
+
+
 @app.post("/predict")
 def predict_price(input_data: Any = Body(...)):
     """

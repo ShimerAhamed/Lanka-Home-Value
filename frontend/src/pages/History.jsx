@@ -15,12 +15,16 @@ function formatDate(dateValue) {
   return new Date(dateValue).toLocaleString();
 }
 
+function getCategoryClass(category) {
+  return `category-badge category-${String(category || "").toLowerCase()}`;
+}
+
 function getErrorMessage(error) {
   if (error.response?.data?.message) {
     return error.response.data.message;
   }
 
-  if (error.code === "ERR_NETWORK") {
+  if (error.code === "ERR_NETWORK" || error.code === "ECONNABORTED") {
     return "Backend is not running. Please start the Express backend first.";
   }
 
@@ -73,9 +77,22 @@ function History() {
   return (
     <section>
       <div className="page-heading">
-        <p className="eyebrow">MongoDB Records</p>
-        <h1>Prediction History</h1>
-        <p>View the latest saved house price predictions from the Express backend.</p>
+        <div className="heading-row">
+          <div>
+            <p className="eyebrow">MongoDB Records</p>
+            <h1>Prediction History</h1>
+            <p>View the latest saved house price predictions from the Express backend.</p>
+          </div>
+
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={loadPredictions}
+            disabled={isLoading}
+          >
+            {isLoading ? "Refreshing..." : "Refresh"}
+          </button>
+        </div>
       </div>
 
       {isLoading && <div className="alert">Loading prediction history...</div>}
@@ -98,7 +115,9 @@ function History() {
 
             <div className="history-price">
               <strong>LKR {formatLkr(prediction.predictedPriceLkr)}</strong>
-              <span>{prediction.priceCategory}</span>
+              <span className={getCategoryClass(prediction.priceCategory)}>
+                {prediction.priceCategory}
+              </span>
             </div>
 
             <button

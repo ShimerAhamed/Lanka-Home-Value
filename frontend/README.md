@@ -61,9 +61,21 @@ http://localhost:5173
 - Prediction History
 - About
 
+## Frontend Features
+
+- Required field validation before prediction
+- Positive number validation for numeric fields
+- Realistic Year Built validation
+- Clear backend connection error messages
+- LKR price formatting with commas
+- Price category badge
+- Prediction disclaimer
+- Prediction history refresh and delete controls
+
 ## API Endpoints Used
 
 ```text
+GET http://localhost:5000/api/health
 POST http://localhost:5000/api/predict
 GET http://localhost:5000/api/predictions
 DELETE http://localhost:5000/api/predictions/:id
