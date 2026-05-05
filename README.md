@@ -215,6 +215,7 @@ Helpful preparation files:
 
 - `DEMO_SCRIPT.md`
 - `VIVA_SHORT_ANSWERS.md`
+- `STEP_07_VIVA_PREPARATION.md`
 - `FINAL_CHECKLIST.md`
 - `TESTING.md`
 - `DEPLOYMENT.md`
