@@ -5,8 +5,9 @@ import numpy as np
 import pandas as pd
 
 
-BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / "models" / "house_price_model.pkl"
+ML_API_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = ML_API_DIR.parent
+MODEL_PATH = PROJECT_DIR / "models" / "house_price_model.pkl"
 
 
 def get_price_category(price_lkr):

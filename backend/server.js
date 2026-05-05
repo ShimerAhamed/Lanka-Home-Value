@@ -12,16 +12,19 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI =
   process.env.MONGO_URI || "mongodb://127.0.0.1:27017/lankahomevalue";
+const allowedOrigins = process.env.CLIENT_URL
+  ? process.env.CLIENT_URL.split(",").map((origin) => origin.trim())
+  : ["http://localhost:5173", "http://127.0.0.1:5173"];
 
 // Allow requests from the React frontend during development.
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+    origin: allowedOrigins,
   })
 );
 
 // Allow Express to read JSON request bodies.
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 
 // Return a beginner-friendly message when invalid JSON is sent.
 app.use((error, req, res, next) => {

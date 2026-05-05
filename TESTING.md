@@ -17,6 +17,7 @@ Terminal 1:
 
 ```powershell
 cd C:\Users\HP\LankaHomeValue
+cd ml-api
 uvicorn api:app --reload
 ```
 
@@ -58,6 +59,7 @@ Expected result:
 If `model` is `not loaded`, run:
 
 ```powershell
+cd C:\Users\HP\LankaHomeValue\ml-api
 python train_model.py
 ```
 
@@ -218,6 +220,7 @@ Fix:
 
 ```powershell
 cd C:\Users\HP\LankaHomeValue
+cd ml-api
 uvicorn api:app --reload
 ```
 
@@ -243,6 +246,7 @@ Fix:
 
 ```powershell
 cd C:\Users\HP\LankaHomeValue
+cd ml-api
 python train_model.py
 ```
 

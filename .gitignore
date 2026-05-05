@@ -16,6 +16,8 @@ ENV/
 # Environment variables and secrets
 .env
 .env.*
+!.env.example
+!**/.env.example
 
 # Machine learning generated artifacts in the Python project root
 /models/

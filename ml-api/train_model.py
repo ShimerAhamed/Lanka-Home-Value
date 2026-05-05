@@ -14,11 +14,14 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.tree import DecisionTreeRegressor
 
 
-# Project paths
-BASE_DIR = Path(__file__).resolve().parent
-DATASET_DIR = BASE_DIR / "dataset"
-MODELS_DIR = BASE_DIR / "models"
-OUTPUTS_DIR = BASE_DIR / "outputs"
+# Project paths.
+# This file lives inside ml-api, while dataset/models/outputs live in the main
+# LankaHomeValue project folder.
+ML_API_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = ML_API_DIR.parent
+DATASET_DIR = PROJECT_DIR / "dataset"
+MODELS_DIR = PROJECT_DIR / "models"
+OUTPUTS_DIR = PROJECT_DIR / "outputs"
 DATASET_FILENAMES = [
     "Updated House Selling Dataset.csv",
     "Updated House Selling Dataset(1).csv",

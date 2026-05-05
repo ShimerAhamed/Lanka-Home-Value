@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 from typing import Any, Dict
 
 import joblib
@@ -11,7 +12,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # ------------------------------------------------------------
 # How to run this API in Windows PowerShell or PyCharm terminal:
 #
-#   cd C:\Users\HP\LankaHomeValue
+#   cd C:\Users\HP\LankaHomeValue\ml-api
 #   uvicorn api:app --reload
 #
 # Example JSON input for POST /predict:
@@ -53,8 +54,15 @@ from fastapi.middleware.cors import CORSMiddleware
 # ------------------------------------------------------------
 
 
-BASE_DIR = Path(__file__).resolve().parent
-MODEL_PATH = BASE_DIR / "models" / "house_price_model.pkl"
+ML_API_DIR = Path(__file__).resolve().parent
+PROJECT_DIR = ML_API_DIR.parent
+MODEL_PATH = PROJECT_DIR / "models" / "house_price_model.pkl"
+allowed_origins = os.getenv("CORS_ORIGINS", "*")
+cors_origins = (
+    ["*"]
+    if allowed_origins == "*"
+    else [origin.strip() for origin in allowed_origins.split(",") if origin.strip()]
+)
 
 app = FastAPI(
     title="LankaHomeValue API",
@@ -66,7 +74,7 @@ app = FastAPI(
 # to call this API during development.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins,
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -158,7 +166,11 @@ def home():
 @app.get("/health")
 def health_check():
     """Health route for checking whether FastAPI and the trained model are ready."""
-    model_status = "loaded" if MODEL_PATH.exists() else "not loaded"
+    try:
+        load_model()
+        model_status = "loaded"
+    except Exception:
+        model_status = "not loaded"
 
     return {
         "api": "running",
