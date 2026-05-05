@@ -1,0 +1,391 @@
+/* App.css contains the full visual style for the LankaHomeValue frontend. */
+:root {
+  color: #102033;
+  background: #eef4fb;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-shell {
+  min-height: 100vh;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 6vw;
+  background: #ffffff;
+  border-bottom: 1px solid #d7e2ee;
+  box-shadow: 0 8px 24px rgba(21, 53, 86, 0.06);
+}
+
+.brand {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0c4a8a;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  padding: 9px 12px;
+  border-radius: 6px;
+  color: #40566f;
+  font-weight: 600;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+  background: #e7f1fb;
+  color: #0c4a8a;
+}
+
+.page-container {
+  width: min(1180px, 92vw);
+  margin: 0 auto;
+  padding: 34px 0 56px;
+}
+
+.home-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.8fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.hero-panel,
+.summary-panel,
+.form-section,
+.result-card,
+.history-card,
+.info-card,
+.notice-card,
+.empty-state,
+.alert {
+  background: #ffffff;
+  border: 1px solid #d9e5f2;
+  border-radius: 8px;
+  box-shadow: 0 16px 38px rgba(21, 53, 86, 0.08);
+}
+
+.hero-panel {
+  padding: clamp(30px, 5vw, 56px);
+}
+
+.hero-panel h1,
+.page-heading h1 {
+  margin: 0;
+  color: #0b3563;
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1.05;
+}
+
+.hero-panel h2 {
+  margin: 12px 0 18px;
+  color: #1769aa;
+  font-size: clamp(1.2rem, 2.4vw, 2rem);
+  font-weight: 700;
+}
+
+.hero-panel p,
+.page-heading p,
+.info-card p,
+.notice-card p,
+.history-card p {
+  color: #52677f;
+  line-height: 1.65;
+}
+
+.eyebrow,
+.metric-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #2877b8;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.primary-button {
+  margin-top: 14px;
+  padding: 0 20px;
+  background: #0c65b8;
+  color: #ffffff;
+}
+
+.primary-button:hover {
+  background: #09508f;
+}
+
+.primary-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.secondary-button {
+  padding: 0 16px;
+  background: #e8f1fa;
+  color: #0c4a8a;
+}
+
+.danger-button {
+  background: #ffe8e8;
+  color: #b3261e;
+}
+
+.summary-panel {
+  display: grid;
+  gap: 14px;
+  padding: 24px;
+}
+
+.summary-panel div {
+  padding: 18px;
+  background: #f4f8fc;
+  border: 1px solid #dce8f4;
+  border-radius: 6px;
+}
+
+.summary-panel strong {
+  display: block;
+  color: #0b3563;
+  font-size: 1.1rem;
+}
+
+.page-heading {
+  margin-bottom: 24px;
+}
+
+.page-heading h1 {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+}
+
+.prediction-form {
+  display: grid;
+  gap: 20px;
+}
+
+.form-section {
+  padding: 22px;
+}
+
+.form-section h2,
+.result-card h2,
+.history-card h2,
+.info-card h2,
+.notice-card h2 {
+  margin: 0 0 16px;
+  color: #0b3563;
+  font-size: 1.25rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-field {
+  display: grid;
+  gap: 7px;
+}
+
+.form-field span {
+  color: #334b64;
+  font-weight: 700;
+}
+
+.form-field input,
+.form-field select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  color: #102033;
+  background: #fbfdff;
+  border: 1px solid #bfd0e2;
+  border-radius: 6px;
+  outline: none;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  border-color: #0c65b8;
+  box-shadow: 0 0 0 3px rgba(12, 101, 184, 0.14);
+}
+
+.form-submit {
+  justify-self: start;
+}
+
+.alert,
+.empty-state,
+.result-card,
+.notice-card {
+  margin-top: 20px;
+  padding: 18px;
+}
+
+.alert {
+  color: #0b3563;
+}
+
+.alert-error {
+  color: #8a1c1c;
+  background: #fff5f5;
+  border-color: #f0b9b9;
+}
+
+.result-card {
+  border-left: 5px solid #0c65b8;
+}
+
+.result-card p {
+  margin: 0;
+  color: #1769aa;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.history-list {
+  display: grid;
+  gap: 14px;
+}
+
+.history-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 18px;
+  align-items: center;
+  padding: 18px;
+}
+
+.history-price {
+  display: grid;
+  gap: 4px;
+  text-align: right;
+}
+
+.history-price strong {
+  color: #0b3563;
+  font-size: 1.15rem;
+}
+
+.history-price span {
+  color: #1769aa;
+  font-weight: 800;
+}
+
+.architecture-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.info-card {
+  padding: 20px;
+}
+
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+  background: #0c65b8;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .home-grid,
+  .architecture-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .history-card {
+    grid-template-columns: 1fr;
+  }
+
+  .history-price {
+    text-align: left;
+  }
+}
+
+@media (max-width: 620px) {
+  .page-container {
+    width: min(94vw, 1180px);
+    padding-top: 22px;
+  }
+
+  .nav-links {
+    width: 100%;
+  }
+
+  .nav-links a {
+    flex: 1 1 140px;
+    text-align: center;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-panel,
+  .form-section {
+    padding: 18px;
+  }
+}

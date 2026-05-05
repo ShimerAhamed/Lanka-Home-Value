@@ -31,6 +31,7 @@ yarn-error.log*
 
 # Node.js dependencies
 node_modules/
+dist/
 
 # OS files
 .DS_Store

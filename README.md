@@ -38,6 +38,11 @@ LankaHomeValue/
     models/
     README.md
 
+  frontend/
+    package.json
+    src/
+    README.md
+
   api.py
   train_model.py
   test_prediction.py
@@ -128,6 +133,8 @@ npm install
 npm run dev
 ```
 
+If PowerShell blocks `npm`, use `npm.cmd install` and `npm.cmd run dev`.
+
 Express backend URL:
 
 ```text
@@ -144,6 +151,22 @@ Prediction history endpoint:
 
 ```text
 GET http://localhost:5000/api/predictions
+```
+
+Run the React frontend in a third terminal:
+
+```powershell
+cd C:\Users\HP\LankaHomeValue\frontend
+npm install
+npm run dev
+```
+
+If PowerShell blocks `npm`, use `npm.cmd install` and `npm.cmd run dev`.
+
+Frontend URL:
+
+```text
+http://localhost:5173
 ```
 
 Example API response:
